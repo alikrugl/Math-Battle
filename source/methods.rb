@@ -10,11 +10,12 @@ module Methods
       print 'Player 1, please enter your name(more that 2 symbols): '
       name1 = gets.chomp.to_s
     end
-    puts '  '
+    puts ' '
     while name2.length <= 2
       print 'Player 2, please enter your name(more that 2 symbols): '
       name2 = gets.chomp.to_s
     end
-    [name1, name2]
+    puts ' '
+    [name1.capitalize, name2.capitalize]
   end
 end
