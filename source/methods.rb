@@ -18,4 +18,14 @@ module Methods
     puts ' '
     [name1.capitalize, name2.capitalize]
   end
+
+  # counting to the expression showed
+  def wait_for_the_expr
+    puts "3"
+    sleep(1)
+    puts "2"
+    sleep(1)
+    puts "1"
+    sleep(1)
+  end
 end

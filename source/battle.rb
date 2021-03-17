@@ -37,25 +37,19 @@ class Battle
     time = Benchmark.measure do
       player_answer = gets.to_i
     end
-    if question.answer == player_answer and time.real < 20
-      second_player.health -= 20 - time.real.round(0)
-    elsif  question.answer == player_answer and time.real >= 20
-      puts "Woops, #{second_player.name} has beated off your hit!"
+    if question.answer == player_answer && time.real.round(0) < 5
+      damage = 20 - time.real.round(0)
+      second_player.health -= damage
+      puts "Time of answering -- #{time.real.round(0)}. #{second_player.name} lost #{damage} health points."
+    elsif  question.answer == player_answer && time.real.round(0) >= 5
+      puts "Woops, #{second_player.name} has beated off your hit! But you have answered correctly!"
     else
       puts "The correct answer was #{question.answer}. #{first_player.name} has missed."
     end
     players_info
   end
 
-  # counting to the expression showed
-  def wait_for_the_expr
-    puts "3"
-    sleep(1)
-    puts "2"
-    sleep(1)
-    puts "1"
-    sleep(1)
-  end
+
 
   # displays players health
   def players_info
@@ -68,15 +62,18 @@ class Battle
   # choosing the first player
   def select_first_player
     # random turn of the players
-    @players.sample.turn = true
-    if @players[0].turn == true
-      @first_player = @players[0]
+    @first_player = @players.sample
+    if @first_player == @players[0]
       @second_player = @players[1]
     else
-      @first_player = @players[1]
       @second_player = @players[0]
     end
-    @first_player
+  end
+
+  # condition to end the game
+  def end_of_the_game?
+    true if @first_player.health <= 0 || @second_player.health <= 0
+    false
   end
 end
 
