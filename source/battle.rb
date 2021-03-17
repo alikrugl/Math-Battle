@@ -1,9 +1,10 @@
-require_relative './player.rb'
-require_relative './expression.rb'
+require_relative './player'
+require_relative './expression'
 require 'colorize'
 require 'benchmark'
 
 class Battle
+  # fisrt player will move first
   attr_accessor :first_player, :second_player
 
   def initialize
@@ -11,13 +12,13 @@ class Battle
     names = enter_names
     # array to call method sample for the random choice of the turn
     @players = [Player.new(names[0]), Player.new(names[1])]
-    puts "Every player has only" + " #{Player.new("Name").health}".red + " health."
+    puts "Every player has only#{" #{Player.new('Name').health}".red} health."
   end
 
   # Main game
   def game
     puts "Have a nice game #{@players[0].name} and #{@players[1].name}!"
-    puts " "
+    puts ''
     select_first_player
     puts "#{@first_player.name} your turn is first."
     loop do
@@ -34,39 +35,40 @@ class Battle
         break
       end
       players_info
-
     end
   end
 
   # 1 round of the game for 2 players
   def round(first_player, second_player)
-    puts "The turn of the player " + "#{first_player.name}".underline + "!"
+    puts "The turn of the player #{first_player.name.to_s.underline}!"
     puts 'Enter any key if you are ready to start: '
     gets
     wait_for_the_expr
-    question = Expression.new
+    # the expression to calculate
+    expression = Expression.new
+    # answer that entered player
     player_answer = nil
-    p question.question
+    p expression.question
     time = Benchmark.measure do
       player_answer = gets.to_i
     end
-    if question.answer == player_answer && time.real.round(0) < 20
+    if expression.answer == player_answer && time.real.round(0) < 20
       damage = 20 - time.real.round(0)
       second_player.health -= damage
       puts "Time of answering -- #{time.real.round(0)} seconds. #{second_player.name} lost #{damage} health points."
-    elsif  question.answer == player_answer && time.real.round(0) >= 20
-      puts "Woops, #{second_player.name} has beated off your hit! But you have answered correctly!"
+    elsif  expression.answer == player_answer && time.real.round(0) >= 20
+      puts "Whoops, #{second_player.name} has beaten off your hit! But you have answered correctly!"
     else
-      puts "The correct answer was #{question.answer}. #{first_player.name} has missed."
+      puts "The correct answer was #{expression.answer}. #{first_player.name} has missed."
     end
   end
 
   # displays players health
   def players_info
-    print "#{@first_player.name}".underline + " has " + "#{@first_player.health}".red + " health. "
-    puts "#{@second_player.name}".underline + " has " + "#{@second_player.health}".red + " health."
-    puts " "
-    puts " "
+    print "#{@first_player.name.to_s.underline} has #{@first_player.health.to_s.red} health. "
+    puts "#{@second_player.name.to_s.underline} has #{@second_player.health.to_s.red} health."
+    puts ' '
+    puts ' '
   end
 
   # choosing the first player
@@ -91,9 +93,9 @@ class Battle
   # @param first_player is a winner
   # @param second_player is a looser
   def win_info(first_player, second_player)
-    puts "THE WINNER IS".green + " #{first_player.name}".green.underline
-    print "#{first_player.name}".underline + " has " + "#{first_player.health}".red + " health. "
-    puts "#{second_player.name}".underline + " has " + "0".red + " health."
+    puts 'THE WINNER IS'.green + " #{first_player.name}".green.underline
+    print "#{first_player.name.to_s.underline} has #{first_player.health.to_s.red} health. "
+    puts "#{second_player.name.to_s.underline} has #{'0'.red} health."
   end
 end
 
