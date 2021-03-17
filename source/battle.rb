@@ -21,7 +21,19 @@ class Battle
     puts "#{@first_player.name} your turn is first."
     loop do
       round(@first_player, @second_player)
+      if @second_player.health <= 0
+        win_info(@first_player, @second_player)
+        break
+      end
+      players_info
+
       round(@second_player, @first_player)
+      if @first_player.health <= 0
+        win_info(@second_player, @first_player)
+        break
+      end
+      players_info
+
     end
   end
 
@@ -37,24 +49,21 @@ class Battle
     time = Benchmark.measure do
       player_answer = gets.to_i
     end
-    if question.answer == player_answer && time.real.round(0) < 5
+    if question.answer == player_answer && time.real.round(0) < 20
       damage = 20 - time.real.round(0)
       second_player.health -= damage
-      puts "Time of answering -- #{time.real.round(0)}. #{second_player.name} lost #{damage} health points."
-    elsif  question.answer == player_answer && time.real.round(0) >= 5
+      puts "Time of answering -- #{time.real.round(0)} seconds. #{second_player.name} lost #{damage} health points."
+    elsif  question.answer == player_answer && time.real.round(0) >= 20
       puts "Woops, #{second_player.name} has beated off your hit! But you have answered correctly!"
     else
       puts "The correct answer was #{question.answer}. #{first_player.name} has missed."
     end
-    players_info
   end
-
-
 
   # displays players health
   def players_info
     print "#{@first_player.name}".underline + " has " + "#{@first_player.health}".red + " health. "
-    puts "#{@second_player.name}".underline + " has " + "#{second_player.health}".red + " health."
+    puts "#{@second_player.name}".underline + " has " + "#{@second_player.health}".red + " health."
     puts " "
     puts " "
   end
@@ -74,6 +83,16 @@ class Battle
   def end_of_the_game?
     true if @first_player.health <= 0 || @second_player.health <= 0
     false
+  end
+
+  # displays info of the winner
+  #
+  # @param first_player is a winner
+  # @param second_player is a looser
+  def win_info(first_player, second_player)
+    puts "THE WINNER IS".green + " #{first_player.name}".green.underline
+    print "#{first_player.name}".underline + " has " + "#{first_player.health}".red + " health. "
+    puts "#{second_player.name}".underline + " has " + "0".red + " health."
   end
 end
 
