@@ -1,5 +1,6 @@
 require_relative './player.rb'
 require_relative './expression.rb'
+require 'colorize'
 
 class Battle
   attr_accessor :first_player, :second_player
@@ -12,7 +13,7 @@ class Battle
   end
   # 1 round of the game for 2 players
   def round(first_player, second_player)
-    puts "The turn of player #{first_player.name}!"
+    puts "The turn of the player "+"#{first_player.name}".underline + "!"
     puts 'Enter any key if you are ready to start: '
     gets
     wait_for_the_expr
@@ -37,18 +38,22 @@ class Battle
     sleep(1)
   end
 
+  # displays players health
   def players_info
-    puts "Player #{first_player.name} has #{first_player.health} health. Player #{@second_player.name} has
-#{@second_player.health} health. "
+    print "#{@first_player.name}".underline + " has " + "#{@first_player.health}".red + " health. "
+    puts "#{@second_player.name}".underline + " has " + "#{second_player.health}".red + " health."
+    puts " "
+    puts " "
   end
 
   # Main game
   def game
     puts "Have a nice game #{@players[0].name} and #{@players[1].name}!"
-    first_player = select_first_player
-    puts "#{first_player.name} your turn is first."
+    select_first_player
+    puts "#{@first_player.name} your turn is first."
     loop do
-      round
+      round(@first_player,@second_player)
+      round(@second_player,@first_player)
     end
   end
 
