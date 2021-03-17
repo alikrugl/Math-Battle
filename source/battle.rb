@@ -1,6 +1,7 @@
 require_relative './player.rb'
 require_relative './expression.rb'
 require 'colorize'
+require 'benchmark'
 
 class Battle
   attr_accessor :first_player, :second_player
@@ -11,23 +12,41 @@ class Battle
     # array to call method sample for the random choice of the turn
     @players = [Player.new(names[0]), Player.new(names[1])]
   end
+
+  # Main game
+  def game
+    puts "Have a nice game #{@players[0].name} and #{@players[1].name}!"
+    puts " "
+    select_first_player
+    puts "#{@first_player.name} your turn is first."
+    loop do
+      round(@first_player, @second_player)
+      round(@second_player, @first_player)
+    end
+  end
+
   # 1 round of the game for 2 players
   def round(first_player, second_player)
-    puts "The turn of the player "+"#{first_player.name}".underline + "!"
+    puts "The turn of the player " + "#{first_player.name}".underline + "!"
     puts 'Enter any key if you are ready to start: '
     gets
     wait_for_the_expr
     question = Expression.new
+    player_answer = nil
     p question.question
-    player_answer = gets.to_i
-    if question.answer == player_answer
-      puts "YES"
-      second_player.health -= 20
+    time = Benchmark.measure do
+      player_answer = gets.to_i
+    end
+    if question.answer == player_answer and time.real < 20
+      second_player.health -= 20 - time.real.round(0)
+    elsif  question.answer == player_answer and time.real >= 20
+      puts "Woops, #{second_player.name} has beated off your hit!"
     else
       puts "The correct answer was #{question.answer}. #{first_player.name} has missed."
     end
     players_info
   end
+
   # counting to the expression showed
   def wait_for_the_expr
     puts "3"
@@ -44,17 +63,6 @@ class Battle
     puts "#{@second_player.name}".underline + " has " + "#{second_player.health}".red + " health."
     puts " "
     puts " "
-  end
-
-  # Main game
-  def game
-    puts "Have a nice game #{@players[0].name} and #{@players[1].name}!"
-    select_first_player
-    puts "#{@first_player.name} your turn is first."
-    loop do
-      round(@first_player,@second_player)
-      round(@second_player,@first_player)
-    end
   end
 
   # choosing the first player
