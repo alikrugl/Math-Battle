@@ -11,6 +11,7 @@ class Battle
     names = enter_names
     # array to call method sample for the random choice of the turn
     @players = [Player.new(names[0]), Player.new(names[1])]
+    puts "Every player has only" + " #{Player.new("Name").health}".red + " health."
   end
 
   # Main game
