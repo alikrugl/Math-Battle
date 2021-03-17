@@ -5,4 +5,4 @@ include Methods
 # Greeting with the name of game
 greeting
 sleep(1)
-Battle.new
+Battle.new.game
